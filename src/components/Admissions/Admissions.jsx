@@ -165,7 +165,7 @@ const Admissions = () => {
           </div>
 
           {/* Fee Structure */}
-          <div>
+          {/* <div>
             <h3 className="text-2xl font-bold mb-6">Fee Structure</h3>
             <div className="overflow-x-auto">
               <table className="w-full bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden">
@@ -190,10 +190,10 @@ const Admissions = () => {
               </table>
             </div>
             <p className="text-sm text-gray-500 mt-4">* Additional charges may apply for transportation, meals, and other optional services.</p>
-          </div>
-        </div>
+          </div> */}
 
-        {/* FAQ Section */}
+
+          {/* FAQ Section */}
         <div className="mt-16">
           <h3 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h3>
           <div className="max-w-3xl mx-auto space-y-4">
@@ -215,6 +215,9 @@ const Admissions = () => {
             ))}
           </div>
         </div>
+        </div>
+
+        
       </div>
     </section>
   );

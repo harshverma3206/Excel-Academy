@@ -46,7 +46,7 @@ function App() {
       <main>
         <Hero />
         <About />
-        <Academics />
+        {/* <Academics /> */}
         <Facilities />
         <Faculty />
         <StudentLife />

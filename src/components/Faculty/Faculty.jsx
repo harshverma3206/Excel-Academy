@@ -13,22 +13,22 @@ const Faculty = () => {
   const departments = ['All', ...new Set(faculty.map(m => m.department))];
   const filteredFaculty = filter === 'All' ? faculty : faculty.filter(m => m.department === filter);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.faculty-card', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-        opacity: 0,
-        x: -30,
-        stagger: 0.1,
-        duration: 0.6,
-      });
-    }, sectionRef);
+  // useEffect(() => {
+  //   const ctx = gsap.context(() => {
+  //     gsap.from('.faculty-card', {
+  //       scrollTrigger: {
+  //         trigger: sectionRef.current,
+  //         start: 'top 80%',
+  //       },
+  //       opacity: 0,
+  //       x: -30,
+  //       stagger: 0.1,
+  //       duration: 0.6,
+  //     });
+  //   }, sectionRef);
 
-    return () => ctx.revert();
-  }, [filter]);
+  //   return () => ctx.revert();
+  // }, [filter]);
 
   return (
     <section id="faculty" ref={sectionRef} className="py-20 bg-white dark:bg-gray-900">

@@ -11,22 +11,22 @@ const NewsEvents = () => {
   const [activeTab, setActiveTab] = useState('news');
   const [selectedItem, setSelectedItem] = useState(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.news-card, .event-card', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-        opacity: 0,
-        y: 30,
-        stagger: 0.1,
-        duration: 0.6,
-      });
-    }, sectionRef);
+  // useEffect(() => {
+  //   const ctx = gsap.context(() => {
+  //     gsap.from('.news-card, .event-card', {
+  //       scrollTrigger: {
+  //         trigger: sectionRef.current,
+  //         start: 'top 80%',
+  //       },
+  //       opacity: 0,
+  //       y: 30,
+  //       stagger: 0.1,
+  //       duration: 0.6,
+  //     });
+  //   }, sectionRef);
 
-    return () => ctx.revert();
-  }, [activeTab]);
+  //   return () => ctx.revert();
+  // }, [activeTab]);
 
   return (
     <section id="news" ref={sectionRef} className="py-20 bg-gray-50 dark:bg-gray-800">

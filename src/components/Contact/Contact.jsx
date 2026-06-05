@@ -99,7 +99,7 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
+            {/* <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
               <h3 className="text-2xl font-bold mb-4">Connect With Us</h3>
               <div className="flex gap-4">
                 {Object.entries(schoolConfig.socials).map(([platform, url]) => (
@@ -118,7 +118,7 @@ const Contact = () => {
                   </a>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Contact Form */}

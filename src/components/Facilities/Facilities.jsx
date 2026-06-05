@@ -9,22 +9,22 @@ const Facilities = () => {
   const sectionRef = useRef(null);
   const [selectedFacility, setSelectedFacility] = useState(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.facility-card', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-        opacity: 0,
-        scale: 0.9,
-        stagger: 0.1,
-        duration: 0.6,
-      });
-    }, sectionRef);
+  // useEffect(() => {
+  //   const ctx = gsap.context(() => {
+  //     gsap.from('.facility-card', {
+  //       scrollTrigger: {
+  //         trigger: sectionRef.current,
+  //         start: 'top 80%',
+  //       },
+  //       opacity: 0,
+  //       scale: 0.9,
+  //       stagger: 0.1,
+  //       duration: 0.6,
+  //     });
+  //   }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+  //   return () => ctx.revert();
+  // }, []);
 
   return (
     <section id="facilities" ref={sectionRef} className="py-20 bg-gray-50 dark:bg-gray-800">

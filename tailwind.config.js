@@ -11,6 +11,7 @@ export default {
         primary: '#1F2937',
         secondary: '#3B82F6',
         accent: '#10B981',
+
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
