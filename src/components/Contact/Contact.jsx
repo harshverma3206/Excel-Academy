@@ -1,12 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useState } from 'react';
 import { schoolConfig } from '../../data/config';
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Contact = () => {
-  const sectionRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,43 +9,50 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [status, setStatus] = useState(''); // 'sending', 'success', 'error'
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.contact-info', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-        opacity: 0,
-        x: -30,
-        duration: 0.6,
-      });
-      gsap.from('.contact-form', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-        opacity: 0,
-        x: 30,
-        duration: 0.6,
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  // 🔴 YAHAN APNA GOOGLE SHEET URL LAGAO (jo deploy karne ke baad mila tha)
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMcXw4AVtE7WomvkTzFANy2hLjpG21D2hShcEXb1k9L6AX-fVfmuwaQG0w/exec';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Contact form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    setStatus('sending');
+
+    try {
+      const response = await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',  // Important - CORS error nahi aayega
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message
+        })
+      });
+
+      setStatus('success');
+      setSubmitted(true);
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      
+      setTimeout(() => {
+        setSubmitted(false);
+        setStatus('');
+      }, 5000);
+      
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus('error');
+      setTimeout(() => setStatus(''), 5000);
+    }
   };
 
   const contactInfo = [
@@ -61,7 +63,7 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" ref={sectionRef} className="py-20 bg-white dark:bg-gray-900">
+    <section id="contact" className="py-20 bg-white dark:bg-gray-900">
       <div className="container-custom">
         <h2 className="section-title">Contact Us</h2>
         <p className="text-center text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
@@ -70,7 +72,7 @@ const Contact = () => {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <div className="contact-info space-y-6">
+          <div className="space-y-6">
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
               <h3 className="text-2xl font-bold mb-6">Get in Touch</h3>
               <div className="space-y-4">
@@ -99,7 +101,7 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            {/* <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
               <h3 className="text-2xl font-bold mb-4">Connect With Us</h3>
               <div className="flex gap-4">
                 {Object.entries(schoolConfig.socials).map(([platform, url]) => (
@@ -118,17 +120,31 @@ const Contact = () => {
                   </a>
                 ))}
               </div>
-            </div> */}
+            </div>
           </div>
 
           {/* Contact Form */}
-          <div className="contact-form bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
             <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
-            {submitted && (
+            
+            {status === 'success' && (
               <div className="mb-4 p-3 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg text-center">
-                Message sent successfully! We'll get back to you soon.
+                ✅ Message sent successfully! Data saved in Google Sheet.
               </div>
             )}
+            
+            {status === 'error' && (
+              <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg text-center">
+                ❌ Failed to send message. Please try again.
+              </div>
+            )}
+
+            {status === 'sending' && (
+              <div className="mb-4 p-3 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg text-center">
+                ⏳ Sending...
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold mb-2">Your Name *</label>
@@ -141,6 +157,7 @@ const Contact = () => {
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>
+              
               <div>
                 <label className="block text-sm font-semibold mb-2">Email Address *</label>
                 <input
@@ -152,6 +169,7 @@ const Contact = () => {
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>
+              
               <div>
                 <label className="block text-sm font-semibold mb-2">Phone Number</label>
                 <input
@@ -162,6 +180,7 @@ const Contact = () => {
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>
+              
               <div>
                 <label className="block text-sm font-semibold mb-2">Subject *</label>
                 <select
@@ -179,6 +198,7 @@ const Contact = () => {
                   <option>Other</option>
                 </select>
               </div>
+              
               <div>
                 <label className="block text-sm font-semibold mb-2">Message *</label>
                 <textarea
@@ -190,8 +210,13 @@ const Contact = () => {
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 ></textarea>
               </div>
-              <button type="submit" className="btn-primary w-full">
-                Send Message
+              
+              <button 
+                type="submit" 
+                disabled={status === 'sending'}
+                className="btn-primary w-full disabled:opacity-50"
+              >
+                {status === 'sending' ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>
@@ -201,4 +226,4 @@ const Contact = () => {
   );
 };
 
-export default Contact; 
+export default Contact;
