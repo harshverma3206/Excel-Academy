@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { schoolConfig } from '../../data/config';
 
 const Contact = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,11 +11,9 @@ const Contact = () => {
     subject: '',
     message: ''
   });
-  const [status, setStatus] = useState(''); // 'sending', 'success', 'error'
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState('');
 
-  // 🔴 YAHAN APNA GOOGLE SHEET URL LAGAO (jo deploy karne ke baad mila tha)
-const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMcXw4AVtE7WomvkTzFANy2hLjpG21D2hShcEXb1k9L6AX-fVfmuwaQG0w/exec';
+  const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzR2j0mH7bCeYRtPo9SHOpZiJWqvYVNBq6oWU1RjNOd5-UMQFbRSMac0mwXuqP9zI1KBg/exec';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,9 +24,9 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
     setStatus('sending');
 
     try {
-      const response = await fetch(GOOGLE_SHEET_URL, {
+      await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
-        mode: 'no-cors',  // Important - CORS error nahi aayega
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -39,15 +39,8 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
         })
       });
 
-      setStatus('success');
-      setSubmitted(true);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      
-      setTimeout(() => {
-        setSubmitted(false);
-        setStatus('');
-      }, 5000);
-      
+      navigate('/thank-you');
+
     } catch (error) {
       console.error('Error:', error);
       setStatus('error');
@@ -126,13 +119,7 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
           {/* Contact Form */}
           <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
             <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
-            
-            {status === 'success' && (
-              <div className="mb-4 p-3 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg text-center">
-                ✅ Message sent successfully! Data saved in Google Sheet.
-              </div>
-            )}
-            
+
             {status === 'error' && (
               <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg text-center">
                 ❌ Failed to send message. Please try again.
@@ -144,7 +131,7 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
                 ⏳ Sending...
               </div>
             )}
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold mb-2">Your Name *</label>
@@ -157,7 +144,7 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold mb-2">Email Address *</label>
                 <input
@@ -169,7 +156,7 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold mb-2">Phone Number</label>
                 <input
@@ -180,7 +167,7 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold mb-2">Subject *</label>
                 <select
@@ -191,14 +178,14 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 >
                   <option value="">Select Subject</option>
-                  <option>Admissions Inquiry</option>
-                  <option>General Question</option>
-                  <option>Complaint/Suggestion</option>
-                  <option>Feedback</option>
-                  <option>Other</option>
+                  <option value="Admissions Inquiry">Admissions Inquiry</option>
+                  <option value="General Question">General Question</option>
+                  <option value="Complaint/Suggestion">Complaint/Suggestion</option>
+                  <option value="Feedback">Feedback</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold mb-2">Message *</label>
                 <textarea
@@ -210,9 +197,9 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxj2Lc6g7x_uMc
                   className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary"
                 ></textarea>
               </div>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 disabled={status === 'sending'}
                 className="btn-primary w-full disabled:opacity-50"
               >

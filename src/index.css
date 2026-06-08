@@ -62,3 +62,12 @@
     @apply bg-transparent border-2 border-secondary text-secondary px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-secondary hover:text-white hover:scale-105;
   }
 }
+
+@keyframes progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animate-progress {
+  animation: progress 5s linear forwards;
+}

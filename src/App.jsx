@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
@@ -11,12 +12,23 @@ import Admissions from './components/Admissions/Admissions';
 import NewsEvents from './components/NewsEvents/NewsEvents';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
+import ThankYou from './components/ThankYou/ThankYou';
 import ScrollProgressBar from './components/Common/ScrollProgressBar';
 import BackToTopButton from './components/Common/BackToTopButton';
 
-function App() {
+// Scroll to top component
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  
+  return null;
+}
+
+function AppContent() {
   // useEffect(() => {
-  //   // Initialize smooth scrolling
   //   const lenis = new Lenis({
   //     duration: 1.2,
   //     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -40,23 +52,39 @@ function App() {
   // }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <>
       <ScrollProgressBar />
       <Navbar />
       <main>
-        <Hero />
-        <About />
-        {/* <Academics /> */}
-        <Facilities />
-        <Faculty />
-        <StudentLife />
-        <Admissions />
-        <NewsEvents />
-        <Contact />
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Hero />
+              <About />
+              <Academics />
+              <Facilities />
+              <Faculty />
+              <StudentLife />
+              <Admissions />
+              <NewsEvents />
+              <Contact />
+            </>
+          } />
+          <Route path="/thank-you" element={<ThankYou />} />
+        </Routes>
       </main>
       <Footer />
       <BackToTopButton />
-    </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <AppContent />
+    </Router>
   );
 }
 
